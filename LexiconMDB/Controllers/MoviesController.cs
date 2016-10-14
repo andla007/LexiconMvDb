@@ -15,6 +15,7 @@ namespace LexiconMDB.Controllers
     {
         private MovieDbContext db = new MovieDbContext();
 
+
         // GET: Movies
         public ActionResult Index(string sort)
         {
@@ -25,6 +26,22 @@ namespace LexiconMDB.Controllers
             }
             return View(model);
             //return View(db.Movies.ToList());
+        }
+
+        public ActionResult Genre(string id)
+        {
+            if(string.IsNullOrWhiteSpace(id))
+            {
+                return RedirectToAction("Index");
+            }
+            ViewBag.Genre = id;
+            var model = db.Movies.Where(m => m.Genre.ToString().ToLower() == id.ToLower());
+
+            if(model.Count()==0)
+            {
+                ViewBag.ResultMessage = $"There are no movies in the genre '{id}'";
+            }
+            return View(model.ToList());
         }
 
         // GET: Movies/Details/5
